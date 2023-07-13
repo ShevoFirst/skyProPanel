@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.shevofirst.skypropanel</id>
-    <name>skyProPanel Template</name>
+    <name>SkyProPanel Template</name>
     <vendor>shevofirst</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -9,10 +9,12 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.shevofirst.skypropanel.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="SkyPanelFactory" id = "SkyPanel" secondary="true" icon="AllIcons.Toolwindows.WebToolWindow" anchor="right"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.shevofirst.skypropanel.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
+    <actions>
+        <action id="SkyPanelAction" class="SkyPanelAction" text="Action" description="Action">
+            <keyboard-shortcut keymap="$default" first-keystroke="OPEN_BRACKET" second-keystroke="CLOSE_BRACKET"/>
+        </action>
+    </actions>
 </idea-plugin>

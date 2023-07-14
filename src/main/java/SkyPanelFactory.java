@@ -35,7 +35,7 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
 
         private final JTextField textField2 = new JTextField();
         private final JTextField textField1 = new JTextField();
-
+        private SkySocket socket = new SkySocket();
 
 
         public SkyPanelContent() {
@@ -79,35 +79,17 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
             JButton getTreeButton = new JButton("get tree");
             getTreeButton.addActionListener(e -> {
 
-                StringBuilder sb;
-                try {
-                    System.out.println(SkyPanelAction.getVirtualPath());
-                    sb = displayProjectTree(new File(SkyPanelAction.getVirtualPath()),new StringBuilder(),0);
-                }catch (NullPointerException ex){
-                    area.setText("please click on the key buttons \"[\" and \"]\" then click on \"get tree\" again\n");
-                    return;
-                }
-                area.setText(sb.toString());
-
             });
             getTreeButton.setBackground(Color.blue);
             controlsPanel.add(getTreeButton);
 
             JButton getSocketButton = new JButton("getSocket");
             getSocketButton.addActionListener(e -> {
-                URI uri = URI.create("wss://ws.postman-echo.com/socketio");
-                IO.Options options = IO.Options.builder()
-                        .setTransports(new String[]{WebSocket.NAME})
-                        .setForceNew(true)
-                        .setUpgrade(true)
-                        .build();
-                Socket socket = IO.socket(uri,options);
-                socket.on(Socket.EVENT_CONNECT, args -> {
+                if (socket.socket.connected()){
                     area.setText("socket connected");
-                    System.out.println(4343);
-                })
-                        .on(Socket.EVENT_DISCONNECT, args -> area.setText("socket disconnected"));
-                socket.connect();
+                }else {
+                    area.setText("socket disconnected");
+                }
             });
             getSocketButton.setBackground(Color.BLUE);
             controlsPanel.add(getSocketButton);

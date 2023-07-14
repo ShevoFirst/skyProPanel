@@ -97,7 +97,7 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
             getSocketButton.addActionListener(e -> {
                 URI uri = URI.create("wss://ws.postman-echo.com/socketio");
                 IO.Options options = IO.Options.builder()
-                        .setTransports(new String[]{"websocket"})
+                        .setTransports(new String[]{WebSocket.NAME})
                         .setForceNew(true)
                         .setUpgrade(true)
                         .build();

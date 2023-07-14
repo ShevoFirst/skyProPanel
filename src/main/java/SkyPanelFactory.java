@@ -7,17 +7,10 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import io.socket.engineio.client.transports.Polling;
-import io.socket.engineio.client.transports.WebSocket;
 import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.net.URI;
-import java.util.Objects;
 
 public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
 
@@ -35,7 +28,7 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
 
         private final JTextField textField2 = new JTextField();
         private final JTextField textField1 = new JTextField();
-        private SkySocket socket = new SkySocket();
+        private final SkySocket socket = new SkySocket();
 
 
         public SkyPanelContent() {
@@ -78,7 +71,15 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
             //чтобы получить дерево нужно прожать две кнопки на клавиатуре "["  и  "]" и нажать на кнопку "get tree"
             JButton getTreeButton = new JButton("get tree");
             getTreeButton.addActionListener(e -> {
-
+                StringBuilder sb;
+                try {
+                    System.out.println(SkyPanelAction.getVirtualPath());
+                    sb = displayProjectTree(new File(SkyPanelAction.getVirtualPath()),new StringBuilder(),0);
+                }catch (NullPointerException ex){
+                    area.setText("please click on the key buttons \"[\" and \"]\" then click on \"get tree\" again\n");
+                    return;
+                }
+                area.setText(sb.toString());
             });
             getTreeButton.setBackground(Color.blue);
             controlsPanel.add(getTreeButton);

@@ -9,6 +9,9 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import io.socket.engineio.client.transports.Polling;
+import io.socket.engineio.client.transports.WebSocket;
 import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +35,6 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
 
         private final JTextField textField2 = new JTextField();
         private final JTextField textField1 = new JTextField();
-        private final URI uri = URI.create("wss://ws.postman-echo.com/socketio/");
 
 
 
@@ -76,6 +78,7 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
             //чтобы получить дерево нужно прожать две кнопки на клавиатуре "["  и  "]" и нажать на кнопку "get tree"
             JButton getTreeButton = new JButton("get tree");
             getTreeButton.addActionListener(e -> {
+
                 StringBuilder sb;
                 try {
                     System.out.println(SkyPanelAction.getVirtualPath());
@@ -92,14 +95,19 @@ public class SkyPanelFactory implements ToolWindowFactory, DumbAware {
 
             JButton getSocketButton = new JButton("getSocket");
             getSocketButton.addActionListener(e -> {
-                IO.Options options = IO.Options.builder().setTransports(new String[]{"websocket"}).setForceNew(true).setReconnectionAttempts(3).setReconnectionDelay(1000).build();
-                Socket socket = IO.socket(uri);
-                if (socket.connect().connected()){
+                URI uri = URI.create("wss://ws.postman-echo.com/socketio");
+                IO.Options options = IO.Options.builder()
+                        .setTransports(new String[]{"websocket"})
+                        .setForceNew(true)
+                        .setUpgrade(true)
+                        .build();
+                Socket socket = IO.socket(uri,options);
+                socket.on(Socket.EVENT_CONNECT, args -> {
                     area.setText("socket connected");
-                }else{
-                    area.setText("socket disabled");
-                }
-                socket.disconnect();
+                    System.out.println(4343);
+                })
+                        .on(Socket.EVENT_DISCONNECT, args -> area.setText("socket disconnected"));
+                socket.connect();
             });
             getSocketButton.setBackground(Color.BLUE);
             controlsPanel.add(getSocketButton);

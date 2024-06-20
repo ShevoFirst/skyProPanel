@@ -9,7 +9,7 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="SkyPanelFactory" id = "SkyPanel" secondary="true" icon="AllIcons.Toolwindows.WebToolWindow" anchor="right"/>
+        <toolWindow factoryClass="SkyPanelFactory" id = "SkyPanel" secondary="true" icon="AllIcons.Toolwindows.InfoEvents" anchor="right"/>
     </extensions>
 
     <actions>
